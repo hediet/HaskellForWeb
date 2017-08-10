@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": true,
+        "allowUnreachableCode": false,
+        "sourceMap": true,
+		"jsx": "react",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "outDir": "dist-cli"
+    },
+    "include": [
+        "tyml-parser/tyml.d.ts",
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ]
+}

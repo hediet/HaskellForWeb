@@ -1,0 +1,30 @@
+{~tyml 0.9
+	!ns/:    <tyml.org/typedef/0.9>
+	!ns/t:  <tyml.org/types/0.9>
+	!ns/tns:  <tyml.org/spec/0.9>
+}
+{DefinitionPackage [
+	{NamespaceDefinition <tns>
+		Types:[
+			{TypeAliasDef <Content> Type:[<tns/ContentBase> <t/IndentedText> {ArrayType <tns/Content>}]
+			}
+
+			{ObjectTypeDef <ContentBase> ExtensibleKind:Abstract
+			}
+
+			{ObjectTypeDef <Specification> Extends:<tns/ContentBase>
+				Attributes:[
+					{~ 'Type:<t/String> <Title>}
+					{~ 'Type:<tns/Content> <Content> CanBeImplicit:true}
+				]
+			}
+
+			{ObjectTypeDef <Section> Extends:<tns/ContentBase>
+				Attributes:[
+					{~ 'Type:<tns/ContentBase> <InnerContent> CanBeImplicit:true}
+				]
+			}
+
+		]
+	}
+]}
