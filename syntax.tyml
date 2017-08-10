@@ -1,0 +1,64 @@
+{Syntax
+
+
+	{AbstractSyntax <Module> [
+		{Syntax <ImplicitModule> [
+			{Member <Body>}
+		]}
+		{Syntax <ExplicitModule> [
+			{Token <Module>}
+			{Member <Body>}
+		]}
+	]}
+
+	{Syntax <Body> [
+		
+	]}
+
+	{AbstractSyntax <Statement>}
+
+	{AbstractSyntax <Expression>
+	
+
+		{Syntax <LetExpression> [
+			{Member <Declarations>}
+			{Member <Expression>}
+		]}
+
+		{Syntax <IfExpression> [
+			{Member <Condition> Type:<Expression>}
+			{Member <IfExpression> Type:<Expression>}
+			{Member <ElseExpression> Type:<Expression>}
+		]}
+
+		{Syntax <CaseExpression> [
+			{Member <Expression> Type:<Expression>}
+			{Members <Cases> Type:<Case> AtLeastOne:true}
+		]}
+
+		{Syntax <Case> [
+			{Member Type:<Pattern>}
+			{Token Kind:<Arrow>}
+			{Member Type:<Expression>}
+			{Member Type:<WhereStatement> IsOptional:true}
+		]}
+
+		{Syntax <DoExpression> [
+			{Member <Statements>}
+		]}
+
+		{Syntax <FunctionApplication> [
+			{Member <FunctionExpression> Type:<Expression>}
+			{Member <Argument> Type:<Expression>}
+		]}
+
+		{Syntax <Variable>}
+		{Syntax <GeneralConstructor>}
+		{Syntax <Literal>}
+		{Syntax <ParenthesizedExpression> [
+
+			{Member <Expression> Type:<Expression>}
+		]}
+
+	}
+}
