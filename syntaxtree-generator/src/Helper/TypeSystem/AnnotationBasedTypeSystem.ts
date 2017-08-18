@@ -71,7 +71,8 @@ class UnionTypeImplementation extends UnionType {
 
 class ArrayTypeImplementation extends ArrayType {
     
-    constructor(private ctor: Ctor, private itemType: Ctor, private ts: AnnotationBasedTypeSystem) {
+    constructor(private ctor: Ctor, private itemType: Ctor,
+            private ts: AnnotationBasedTypeSystem) {
         super();
     }
     
@@ -85,6 +86,20 @@ class ArrayTypeImplementation extends ArrayType {
     
 	public createInstance(items: any[]): any {
         return new this.ctor(items);
+    }
+}
+
+class DefaultArrayType extends ArrayType {
+    constructor(private itemType: Ctor, private ts: AnnotationBasedTypeSystem) {
+        super();
+    }
+
+    public getItemType(): Type {
+        return this.ts.getTypeByCtor(this.itemType);
+    }
+
+    public createInstance(items: any[]): any {
+        return items;
     }
 }
 
@@ -135,7 +150,12 @@ class ObjectTypeImplementation extends ObjectType {
         const result: { [name: string]: Attribute2 } = {};
 
         return fields.map(f => {
-            const type = this.ts.getTypeByCtor(f.type);
+
+            let type: Type;
+            if (f.options.itemCtor)
+                type = new DefaultArrayType(f.options.itemCtor, this.ts);
+            else
+                type = this.ts.getTypeByCtor(f.type);
             const canBeImplicit = f.options.canBeImplicit || false;
             const isOptional = f.options.isOptional || false;
             const name = f.name.substr(0, 1).toUpperCase() + f.name.substr(1);

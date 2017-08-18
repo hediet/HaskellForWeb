@@ -1,0 +1,13 @@
+{
+  "name": "parser",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "moo": "^0.4.1",
+    "typed-lexer": "^1.0.2"
+  },
+  "devDependencies": {
+    "@types/moo": "^0.3.0"
+  }
+}

@@ -4,6 +4,7 @@ import { NamespacedIdentifier } from "./TypeSystem/AbstractTypeSystem";
 export interface FieldOptions {
 	canBeImplicit?: boolean;
 	isOptional?: boolean;
+	itemCtor?: Function;
 }
 
 export interface Field {

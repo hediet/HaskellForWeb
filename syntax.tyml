@@ -1,64 +1,272 @@
-{Syntax
+{!tyml 1.0}
+{SyntaxDescription !ns:<hediet.de/haskell-parser>
+	TokenKinds:[
+		{TokenKind <Invalid>}
 
+		{TokenKind <Integer>}
+		{TokenKind <Float>}
+		{TokenKind <Char>}
+		{TokenKind <String>}
 
-	{AbstractSyntax <Module> [
-		{Syntax <ImplicitModule> [
-			{Member <Body>}
-		]}
-		{Syntax <ExplicitModule> [
-			{Token <Module>}
-			{Member <Body>}
-		]}
-	]}
-
-	{Syntax <Body> [
+		{TokenKind <NewLine>}
+		{TokenKind <Whitespace>}
+		{TokenKind <Comment>}
 		
-	]}
+		{TokenKind <SingleLineComment>}
+		{TokenKind <MultiLineComment>}
 
-	{AbstractSyntax <Statement>}
+		{TokenKind <VariableId>}
+		{TokenKind <ConstructorId>}
+		{TokenKind <VariableSymbol>}
+		{TokenKind <ConstructorSymbol>}
 
-	{AbstractSyntax <Expression>
-	
+		{TokenKind <ModuleIdPart>}
+		{TokenKind <ModuleIdDot>}
 
-		{Syntax <LetExpression> [
-			{Member <Declarations>}
-			{Member <Expression>}
+		{ReservedId <case>}
+		{ReservedId <class>}
+		{ReservedId <data>}
+		{ReservedId <default>}
+		{ReservedId <deriving>}
+		{ReservedId <do>}
+		{ReservedId <else>}
+		{ReservedId <foreign>}
+		{ReservedId <if>}
+		{ReservedId <import>}
+		{ReservedId <in>}
+		{ReservedId <infix>}
+		{ReservedId <infixl>}
+		{ReservedId <infixr>}
+		{ReservedId <instance>}
+		{ReservedId <let>}
+		{ReservedId <module>}
+		{ReservedId <newtype>}
+		{ReservedId <of>}
+		{ReservedId <then>}
+		{ReservedId <type>}
+		{ReservedId <where>}
+		{ReservedId <_> Name:<Underscore>}
+
+		{ReservedOp <..> Name:<DotDot>}
+		{ReservedOp <:> Name:<Colon>}
+		{ReservedOp <::> Name:<DoubleColon>}
+		{ReservedOp <=> Name:<Equals>}
+		{ReservedOp <\\> Name:<Backslash>}
+		{ReservedOp <|> Name:<Bar>}
+		{ReservedOp <t<<->t> Name:<ThinArrowLeft>}
+		{ReservedOp <t<->>t> Name:<ThinArrowRight>}
+		{ReservedOp <@> Name:<AtSign>}
+		{ReservedOp <~> Name:<Tilde>}
+		{ReservedOp <t<=>>t> Name:<FatArrowRight>}
+
+		{SpecialToken <(> Name:<OpeningParen>}
+		{SpecialToken <)> Name:<ClosingParen>}
+		{SpecialToken <,> Name:<Comma>}
+		{SpecialToken <;> Name:<Semicolon>}
+		{SpecialToken <[> Name:<OpeningBracket>}
+		{SpecialToken <]> Name:<ClosingBracket>}
+		{SpecialToken <`> Name:<Backtick>}
+		{SpecialToken <{> Name:<OpeningBrace>}
+		{SpecialToken <}> Name:<ClosingBrace>}
+	]
+
+	Syntaxes:[
+		{AbstractSyntax <Module> [
+			{Syntax <ImplicitModule> [
+				{Member Type:<Body>}
+			]}
+			{Syntax <ExplicitModule> [
+				{Token <ModuleKeyword>}
+				{Token <WhereKeyword>}
+				{Member Type:<Body>}
+			]}
 		]}
 
-		{Syntax <IfExpression> [
-			{Member <Condition> Type:<Expression>}
-			{Member <IfExpression> Type:<Expression>}
-			{Member <ElseExpression> Type:<Expression>}
+		{Syntax <Body> [
+			{Member Type:<Declarations>}
 		]}
 
-		{Syntax <CaseExpression> [
-			{Member <Expression> Type:<Expression>}
-			{Members <Cases> Type:<Case> AtLeastOne:true}
+		{Syntax <Declarations> [
+			{Members Type:<Declaration> SeparatedByToken:<Semicolon>}
 		]}
 
-		{Syntax <Case> [
-			{Member Type:<Pattern>}
-			{Token Kind:<Arrow>}
-			{Member Type:<Expression>}
-			{Member Type:<WhereStatement> IsOptional:true}
+		{AbstractSyntax <Declaration> [
+			{Syntax <FunctionDeclaration> [
+				{Member Type:<FunctionLhs>}
+				{Member Type:<Rhs>}
+			]}
+			{Syntax <PatternDeclaration> [
+				{Member Type:<Pattern>}
+				{Member Type:<Rhs>}
+			]}
 		]}
 
-		{Syntax <DoExpression> [
-			{Member <Statements>}
+		{AbstractSyntax <Rhs> [
+			{Syntax <RhsExpression> [
+				{Token Kind:<Equals>}
+				{Member Type:<Expression>}
+				{Member Type:<WhereStatement> IsOptional:true}
+			]}
+			{Syntax <RhsGuards> [
+				{Members Type:<RhsGuard> AtLeast:1}
+				{Member Type:<WhereStatement> IsOptional:true}
+			] Helpers:[
+				{Syntax <RhsGuard> [
+					{Members Type:<Guards>}
+					{Token Kind:<Equals>}
+					{Member Type:<Expression>}
+				]}
+			]}
 		]}
 
-		{Syntax <FunctionApplication> [
-			{Member <FunctionExpression> Type:<Expression>}
-			{Member <Argument> Type:<Expression>}
+
+
+		{Syntax <Guards> [
+			{Token Kind:<Bar>}
+			{Members Type:<Guard> SeparatedByToken:<Comma> AtLeast:1}
 		]}
 
-		{Syntax <Variable>}
-		{Syntax <GeneralConstructor>}
-		{Syntax <Literal>}
-		{Syntax <ParenthesizedExpression> [
-
-			{Member <Expression> Type:<Expression>}
+		{AbstractSyntax <Guard> [
+			{Syntax <GuardPattern> [
+				{Member Type:<Pattern>}
+				{Token Kind:<LeftArrow>}
+				{Member Type:<Expression>}
+			]}
+			{Syntax <GuardLetDeclarations> [
+				{Token Kind:<Let>}
+				{Member Type:<Declarations>}
+			]}
+			{Syntax <GuardCondition> [
+				{Member Type:<Expression>}
+			]}
 		]}
 
-	}
+		{Syntax <WhereStatement> [
+			{Token Kind:<WhereKeyword>}
+			{Member Type:<Declarations>}
+		]}
+		{AbstractSyntax <Pattern> [
+			{Syntax <VariablePattern> [
+				{Member Type:<VariableIdentifier>}
+			]}
+		]}
+
+		{AbstractSyntax <FunctionLhs> [
+			{Syntax <ExplicitFunctionLhs> [
+				{Member Type:<VariableIdentifier>}
+				{Members Type:<Pattern> AtLeast:1}
+			]}
+			{Syntax <InfixFunctionLhs> [
+				{Member <LeftPattern> Type:<Pattern>}
+				{Member <InfixVariableIdentifier>}
+				{Member <RightPattern> Type:<Pattern>}
+			]}
+			{Syntax <ParenthesisedFunctionLhs> [
+				{Token Kind:<OpeningParenthesis>}
+				{Member Type:<FunctionLhs>}
+				{Token Kind:<ClosingParenthesis>}
+				{Members Type:<Pattern> AtLeast:1}
+			]}
+		]}
+
+		{AbstractSyntax <Statement>}
+
+		{AbstractSyntax <Expression> [
+		
+			{Syntax <TypedExpression> [
+				{Member Type:<Expression>}
+				{Token Kind:<DoubleColon>}
+				{Member Type:<Type>}
+			]}
+
+			{Syntax <LambdaAbstraction> [
+				{Token Kind:<Backslash>}
+				{Members Type:<Pattern> AtLeast:1}
+				{Token Kind:<ThinRightArrow>}
+				{Member Type:<Expression>}
+			]}
+
+			{Syntax <LetExpression> [
+				{Member Type:<Declarations>}
+				{Token Kind:<InKeyword>}
+				{Member Type:<Expression>}
+			]}
+
+			{Syntax <IfExpression> [
+				{Token Kind:<IfKeyword>}
+				{Member <Condition> Type:<Expression>}
+				{Token Kind:<Semicolon> IsOptional:true}
+
+				{Token Kind:<ThenKeyword>}
+				{Member <IfExpression> Type:<Expression>}
+				{Token Kind:<Semicolon> IsOptional:true}
+
+				{Token Kind:<ElseKeyword>}
+				{Member <ElseExpression> Type:<Expression>}
+			]}
+
+			{Syntax <CaseExpression> [
+				{Member <Expression> Type:<Expression>}
+				{Token Kind:<OfKeyword>}
+				{Token Kind:<OpeningBrace>}
+				{Members <Cases> Type:<Case> AtLeast:1 SeparatedByToken:<Semicolon>}
+				{Token Kind:<ClosingBrace>}
+			]
+				Helpers:[
+					{AbstractSyntax <Case> [
+						{Syntax <PatternCase> [
+							{Member Type:<Pattern>}
+							{Token Kind:<ThinRightArrow>}
+							{Member Type:<Expression>}
+							{Member Type:<WhereStatement> IsOptional:true}
+						]}
+						{Syntax <GuardedCases> [
+							{Member Type:<Pattern>}
+
+							{Members Type:<GuardedCase> AtLeast:1}
+						]
+							Helpers:[
+								{Syntax <GuardedCase> [
+									{Member Type:<Guards>}
+									{Token Kind:<ThinRightArrow>}
+									{Member Type:<Expression>}
+								]}
+							]
+						}
+						{Syntax <EmptyCase> []}
+
+					]}
+				]
+			}
+	{--
+			{Syntax <DoExpression> [
+				{Member <Statements>}
+			]}
+	--}
+
+			{Syntax <FunctionApplication> [
+				{Member <Function> Type:<Expression>}
+				{Member <Argument> Type:<Expression>}
+			]}
+
+			{Syntax <Variable>}
+			{Syntax <GeneralConstructor>}
+			{Syntax <Literal>}
+			{Syntax <ParenthesizedExpression> [
+				{Token Kind:<OpeningParenthesis>}
+				{Member Type:<Expression>}
+				{Token Kind:<ClosingParenthesis>}
+			]}
+			{Syntax <Tuple> [
+				{Token Kind:<OpeningParenthesis>}
+				{Members <Items> Type:<Expression> AtLeast:2 SeparatedByToken:<Comma>}
+				{Token Kind:<ClosingParenthesis>}
+			]}
+			{Syntax <FiniteList> [
+				{Token Kind:<OpeningBracket>}
+				{Members <Items> Type:<Expression> AtLeast:1 SeparatedByToken:<Comma>}
+				{Token Kind:<ClosingBracket>}
+			]}
+		]}
+	]
 }

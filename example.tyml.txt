@@ -1,0 +1,44 @@
+
+{PatternDeclaration
+    Pattern: {VariableIdentifier <infConcat>}
+    Rhs: {RhsExpression
+        EqualsToken: <=>
+        Expression: {FunctionApplication 
+            Function: {VariableExpression <concatHeads>}
+            Argument: {Literal <1>}
+        }
+        WhereStatement:{WhereStatement
+            WhereKeywordToken: <where>
+            Declarations: {Declarations
+                Declarations:[
+                    {FunctionDeclaration
+                        FunctionLhs:{ExplicitFunctionLhs
+                            VariableIdentifier:<concatHeads>
+                            Patterns:[
+                                {VariablePattern VariableIdentifier:<n>}
+                                {VariablePattern VariableIdentifier:<lists>}
+                            ]
+                        }
+                        Rhs:{RhsGuards
+                            RhsGuards:[
+                                {RhsGuard
+                                    Guards:[
+                                        {GuardCondition
+                                            Expression:{FunctionApplication 
+                                                Function:{VariableExpression <null>}
+                                                Argument:{VariableExpression <lists>}
+                                            }
+                                        }
+                                    ]
+                                    EqualsToken:<=>
+                                    Expression: {FiniteListExpression Items:[]}
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
+

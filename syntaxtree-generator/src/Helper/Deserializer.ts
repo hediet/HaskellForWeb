@@ -133,7 +133,9 @@ class DeserializerVisitor extends AstVisitor<Arg, any> {
 			t = arg;
 		else if (arg instanceof UnionType)
 			t = arg.getStringTypes()[0];
-			
+		
+		if (!t) throw new Error(`Error: ${node.getValue()}`);
+
 		const result = t.createInstance(node.getValue());
 		return result;
 	}
@@ -175,12 +177,15 @@ class DeserializerVisitor extends AstVisitor<Arg, any> {
 		let i = 0;
 		for (const attrNode of node.getImplicitAttributes()) {
 			const attrInfo = impAttrs[i];
+			if (!attrInfo) throw `Implicit attribute ${i} does not exist on type ${node.getTypeIdentifier()}, ${node}`;
 			attrValues[attrInfo.name] = this.accept(attrNode, attrInfo.type);
 			i++;
 		}
 
 		for (const attrNode of node.getAttributes()) {
 			const attrInfo = type.getAttribute(attrNode.getIdentifier().getName());
+			if (!attrInfo) throw `Attribute ${attrNode.getIdentifier().getName()} does not exist on type ${node.getTypeIdentifier()}`;
+			
 			attrValues[attrInfo.name] = this.accept(attrNode.getValue(), attrInfo.type);
 		}
 		
